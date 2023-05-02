@@ -1,0 +1,34 @@
+import json
+import requests
+from bs4 import BeautifulSoup
+
+def count_words(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    text = soup.get_text()
+
+    text = ''.join(e for e in text if e.isalnum() or e.isspace())
+    text = text.lower()
+
+    words = text.split()
+    word_counts = {}
+    for word in words:
+        if word in word_counts:
+            word_counts[word] += 1
+        else:
+            word_counts[word] = 1
+
+    return word_counts
+
+def main():
+    url = input("Enter URL of static website: ")
+    word_counts = count_words(url)
+
+    # Convert the word counts to JSON format
+    json_output = json.dumps(word_counts)
+
+    # Print the JSON output
+    print(json_output)
+
+if __name__ == '__main__':
+    main()
